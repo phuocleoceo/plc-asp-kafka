@@ -1,14 +1,18 @@
-// namespace PlcKafkaLibrary.Service;
-//
-// public class KafkaMessageBus<Tk, Tv> : IKafkaMessageBus<Tk, Tv>
-// {
-//     public readonly KafkaProducer<Tk, Tv> _producer;
-//     public KafkaMessageBus(KafkaProducer<Tk, Tv> producer)
-//     {
-//         _producer = producer;
-//     }
-//     public async Task PublishAsync(Tk key, Tv message)
-//     {
-//         await _producer.ProduceAsync(key, message);
-//     }
-// }
+using PlcKafkaLibrary.Producer;
+
+namespace PlcKafkaLibrary.Service;
+
+public class KafkaMessageBus<TK, TV> : IKafkaMessageBus<TK, TV>
+{
+    private readonly KafkaProducer<TK, TV> _producer;
+
+    public KafkaMessageBus(KafkaProducer<TK, TV> producer)
+    {
+        _producer = producer;
+    }
+
+    public async Task PublishAsync(TK key, TV message)
+    {
+        await _producer.ProduceAsync(key, message);
+    }
+}
