@@ -1,6 +1,6 @@
 namespace PlcKafkaLibrary.Consumer;
 
-public interface IKafkaHandler<TK, TV>
+public interface IKafkaConsumerHandler<TK, TV>
 {
     Task HandleAsync(TK key, TV value);
 }

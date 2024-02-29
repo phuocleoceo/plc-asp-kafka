@@ -1,6 +1,4 @@
-using PlcKafkaLibrary.Producer;
-
-namespace PlcKafkaLibrary.Service;
+namespace PlcKafkaLibrary.Producer;
 
 public class KafkaMessageBus<TK, TV> : IKafkaMessageBus<TK, TV>
 {

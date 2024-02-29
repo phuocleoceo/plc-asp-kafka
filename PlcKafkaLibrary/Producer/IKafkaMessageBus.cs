@@ -1,4 +1,4 @@
-namespace PlcKafkaLibrary.Service;
+namespace PlcKafkaLibrary.Producer;
 
 public interface IKafkaMessageBus<TK, TV>
 {

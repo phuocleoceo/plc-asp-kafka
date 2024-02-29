@@ -11,7 +11,7 @@ public class BackGroundKafkaConsumer<TK, TV> : BackgroundService
 {
     private readonly KafkaConsumerConfig<TK, TV> _kafkaConsumerConfig;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private IKafkaHandler<TK, TV> _handler;
+    private IKafkaConsumerHandler<TK, TV> _kafkaConsumerHandler;
 
     public BackGroundKafkaConsumer(
         IOptions<KafkaConsumerConfig<TK, TV>> kafkaConsumerConfig,
@@ -25,7 +25,9 @@ public class BackGroundKafkaConsumer<TK, TV> : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         using IServiceScope scope = _serviceScopeFactory.CreateScope();
-        _handler = scope.ServiceProvider.GetRequiredService<IKafkaHandler<TK, TV>>();
+        _kafkaConsumerHandler = scope.ServiceProvider.GetRequiredService<
+            IKafkaConsumerHandler<TK, TV>
+        >();
 
         ConsumerBuilder<TK, TV> builder = new ConsumerBuilder<TK, TV>(
             _kafkaConsumerConfig
@@ -43,7 +45,7 @@ public class BackGroundKafkaConsumer<TK, TV> : BackgroundService
                 continue;
             }
 
-            await _handler.HandleAsync(result.Message.Key, result.Message.Value);
+            await _kafkaConsumerHandler.HandleAsync(result.Message.Key, result.Message.Value);
             consumer.Commit(result);
             consumer.StoreOffset(result);
         }
