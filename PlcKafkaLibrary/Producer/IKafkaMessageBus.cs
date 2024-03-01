@@ -1,6 +1,6 @@
 namespace PlcKafkaLibrary.Producer;
 
-public interface IKafkaMessageBus<TK, TV>
+public interface IKafkaMessageBus<TKey, TValue>
 {
-    Task PublishAsync(TK key, TV message);
+    Task PublishAsync(TKey key, TValue message);
 }

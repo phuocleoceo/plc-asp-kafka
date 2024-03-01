@@ -10,25 +10,25 @@ namespace PlcKafkaLibrary;
 
 public static class RegisterServiceExtensions
 {
-    public static IServiceCollection AddKafkaProducer<TK, TV>(
+    public static IServiceCollection AddKafkaProducer<TKey, TValue>(
         this IServiceCollection services,
-        Action<KafkaProducerConfig<TK, TV>> configAction
+        Action<KafkaProducerConfig<TKey, TValue>> configAction
     )
     {
         services.AddSingleton(serviceProvider =>
         {
-            IOptions<KafkaProducerConfig<TK, TV>> config = serviceProvider.GetRequiredService<
-                IOptions<KafkaProducerConfig<TK, TV>>
+            IOptions<KafkaProducerConfig<TKey, TValue>> config = serviceProvider.GetRequiredService<
+                IOptions<KafkaProducerConfig<TKey, TValue>>
             >();
 
-            ProducerBuilder<TK, TV> builder = new ProducerBuilder<TK, TV>(
+            ProducerBuilder<TKey, TValue> builder = new ProducerBuilder<TKey, TValue>(
                 config.Value
-            ).SetValueSerializer(new KafkaSerializer<TV>());
+            ).SetValueSerializer(new KafkaSerializer<TValue>());
 
             return builder.Build();
         });
 
-        services.AddSingleton<KafkaProducer<TK, TV>>();
+        services.AddSingleton<KafkaProducer<TKey, TValue>>();
 
         services.Configure(configAction);
 
@@ -37,15 +37,15 @@ public static class RegisterServiceExtensions
         return services;
     }
 
-    public static IServiceCollection AddKafkaConsumer<TK, TV, THandler>(
+    public static IServiceCollection AddKafkaConsumer<TKey, TValue, THandler>(
         this IServiceCollection services,
-        Action<KafkaConsumerConfig<TK, TV>> configAction
+        Action<KafkaConsumerConfig<TKey, TValue>> configAction
     )
-        where THandler : class, IKafkaConsumerHandler<TK, TV>
+        where THandler : class, IKafkaConsumerHandler<TKey, TValue>
     {
-        services.AddScoped<IKafkaConsumerHandler<TK, TV>, THandler>();
+        services.AddScoped<IKafkaConsumerHandler<TKey, TValue>, THandler>();
 
-        services.AddHostedService<BackGroundKafkaConsumer<TK, TV>>();
+        services.AddHostedService<BackGroundKafkaConsumer<TKey, TValue>>();
 
         services.Configure(configAction);
 

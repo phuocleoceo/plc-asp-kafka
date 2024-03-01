@@ -2,7 +2,7 @@ using Confluent.Kafka;
 
 namespace PlcKafkaLibrary.Consumer;
 
-public class KafkaConsumerConfig<TK, TV> : ConsumerConfig
+public class KafkaConsumerConfig<TKey, TValue> : ConsumerConfig
 {
     public string Topic { get; set; }
 

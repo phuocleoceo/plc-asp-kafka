@@ -7,14 +7,14 @@ using PlcKafkaLibrary.Data;
 
 namespace PlcKafkaLibrary.Consumer;
 
-public class BackGroundKafkaConsumer<TK, TV> : BackgroundService
+public class BackGroundKafkaConsumer<TKey, TValue> : BackgroundService
 {
-    private readonly KafkaConsumerConfig<TK, TV> _kafkaConsumerConfig;
+    private readonly KafkaConsumerConfig<TKey, TValue> _kafkaConsumerConfig;
     private readonly IServiceScopeFactory _serviceScopeFactory;
-    private IKafkaConsumerHandler<TK, TV> _kafkaConsumerHandler;
+    private IKafkaConsumerHandler<TKey, TValue> _kafkaConsumerHandler;
 
     public BackGroundKafkaConsumer(
-        IOptions<KafkaConsumerConfig<TK, TV>> kafkaConsumerConfig,
+        IOptions<KafkaConsumerConfig<TKey, TValue>> kafkaConsumerConfig,
         IServiceScopeFactory serviceScopeFactory
     )
     {
@@ -22,23 +22,23 @@ public class BackGroundKafkaConsumer<TK, TV> : BackgroundService
         _kafkaConsumerConfig = kafkaConsumerConfig.Value;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         using IServiceScope scope = _serviceScopeFactory.CreateScope();
         _kafkaConsumerHandler = scope.ServiceProvider.GetRequiredService<
-            IKafkaConsumerHandler<TK, TV>
+            IKafkaConsumerHandler<TKey, TValue>
         >();
 
-        ConsumerBuilder<TK, TV> builder = new ConsumerBuilder<TK, TV>(
+        ConsumerBuilder<TKey, TValue> builder = new ConsumerBuilder<TKey, TValue>(
             _kafkaConsumerConfig
-        ).SetValueDeserializer(new KafkaDeserializer<TV>());
+        ).SetValueDeserializer(new KafkaDeserializer<TValue>());
 
-        using IConsumer<TK, TV> consumer = builder.Build();
+        using IConsumer<TKey, TValue> consumer = builder.Build();
         consumer.Subscribe(_kafkaConsumerConfig.Topic);
 
-        while (!stoppingToken.IsCancellationRequested)
+        while (!cancellationToken.IsCancellationRequested)
         {
-            ConsumeResult<TK, TV> result = consumer.Consume(TimeSpan.FromMilliseconds(1000));
+            ConsumeResult<TKey, TValue> result = consumer.Consume(TimeSpan.FromMilliseconds(1000));
 
             if (result == null)
             {

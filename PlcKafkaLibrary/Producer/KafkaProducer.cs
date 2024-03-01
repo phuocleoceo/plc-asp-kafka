@@ -3,23 +3,26 @@ using Confluent.Kafka;
 
 namespace PlcKafkaLibrary.Producer;
 
-public class KafkaProducer<TK, TV> : IDisposable
+public class KafkaProducer<TKey, TValue> : IDisposable
 {
-    private readonly IProducer<TK, TV> _producer;
+    private readonly IProducer<TKey, TValue> _producer;
     private readonly string _topic;
 
     public KafkaProducer(
-        IOptions<KafkaProducerConfig<TK, TV>> kafkaProducerConfig,
-        IProducer<TK, TV> producer
+        IOptions<KafkaProducerConfig<TKey, TValue>> kafkaProducerConfig,
+        IProducer<TKey, TValue> producer
     )
     {
         _topic = kafkaProducerConfig.Value.Topic;
         _producer = producer;
     }
 
-    public async Task ProduceAsync(TK key, TV value)
+    public async Task ProduceAsync(TKey key, TValue value)
     {
-        await _producer.ProduceAsync(_topic, new Message<TK, TV> { Key = key, Value = value });
+        await _producer.ProduceAsync(
+            _topic,
+            new Message<TKey, TValue> { Key = key, Value = value }
+        );
     }
 
     public void Dispose()
