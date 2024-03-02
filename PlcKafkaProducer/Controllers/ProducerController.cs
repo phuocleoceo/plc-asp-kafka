@@ -24,7 +24,9 @@ public class ProducerController : ControllerBase
     [HttpPost]
     public async Task SendUser([FromBody] User user)
     {
-        await _kafkaMessageBus.PublishAsync(Guid.NewGuid().ToString(), user);
-        _logger.LogInformation($"Produce message {user}");
+        string topic = "plc-users";
+        string key = Guid.NewGuid().ToString();
+        await _kafkaMessageBus.PublishAsync(topic, key, user);
+        _logger.LogInformation($"Produce message {user} with key: {key} to topic: {topic}");
     }
 }

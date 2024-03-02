@@ -5,24 +5,21 @@ namespace PlcKafkaLibrary.Producer;
 
 public class KafkaProducer<TKey, TValue> : IDisposable
 {
+    private readonly KafkaProducerConfig<TKey, TValue> _kafkaProducerConfig;
     private readonly IProducer<TKey, TValue> _producer;
-    private readonly string _topic;
 
     public KafkaProducer(
         IOptions<KafkaProducerConfig<TKey, TValue>> kafkaProducerConfig,
         IProducer<TKey, TValue> producer
     )
     {
-        _topic = kafkaProducerConfig.Value.Topic;
+        _kafkaProducerConfig = kafkaProducerConfig.Value;
         _producer = producer;
     }
 
-    public async Task ProduceAsync(TKey key, TValue value)
+    public async Task ProduceAsync(string topic, TKey key, TValue value)
     {
-        await _producer.ProduceAsync(
-            _topic,
-            new Message<TKey, TValue> { Key = key, Value = value }
-        );
+        await _producer.ProduceAsync(topic, new Message<TKey, TValue> { Key = key, Value = value });
     }
 
     public void Dispose()

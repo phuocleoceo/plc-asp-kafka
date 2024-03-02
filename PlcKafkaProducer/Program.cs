@@ -14,7 +14,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddKafkaProducer<string, object>(p =>
 {
-    p.Topic = "plc-users";
     p.BootstrapServers = "localhost:9092";
     p.SaslMechanism = SaslMechanism.Plain;
     p.SecurityProtocol = SecurityProtocol.SaslPlaintext;
