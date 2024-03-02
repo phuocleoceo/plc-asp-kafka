@@ -1,7 +1,4 @@
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using System;
 
 using PlcKafkaLibrary.Producer;
 using PlcKafkaProducer.Models;
@@ -12,11 +9,11 @@ namespace PlcKafkaProducer.Controllers;
 [Route("api/v1/[controller]")]
 public class ProducerController : ControllerBase
 {
-    private readonly IKafkaMessageBus<string, User> _kafkaMessageBus;
+    private readonly IKafkaMessageBus<string, object> _kafkaMessageBus;
     private readonly ILogger<ProducerController> _logger;
 
     public ProducerController(
-        IKafkaMessageBus<string, User> kafkaMessageBus,
+        IKafkaMessageBus<string, object> kafkaMessageBus,
         ILogger<ProducerController> logger
     )
     {

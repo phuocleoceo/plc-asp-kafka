@@ -1,9 +1,6 @@
 using Confluent.Kafka;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
+
 using PlcKafkaLibrary;
-using PlcKafkaProducer.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddKafkaProducer<string, User>(p =>
+builder.Services.AddKafkaProducer<string, object>(p =>
 {
     p.Topic = "plc-users";
     p.BootstrapServers = "localhost:9092";
