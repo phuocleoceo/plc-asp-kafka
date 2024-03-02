@@ -1,11 +1,29 @@
+using Confluent.Kafka;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+using PlcKafkaLibrary;
+using PlcKafkaProducer.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddKafkaProducer<string, User>(p =>
+{
+    p.Topic = "plc-users";
+    p.BootstrapServers = "localhost:9092";
+    p.SaslMechanism = SaslMechanism.Plain;
+    p.SecurityProtocol = SecurityProtocol.SaslPlaintext;
+    p.SaslUsername = "admin";
+    p.SaslPassword = "admin-secret";
+});
 
 var app = builder.Build();
 
