@@ -17,6 +17,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddKafkaConsumer<string, User, UserHandler>(p =>
 {
     p.Topic = "plc-users";
+    p.Timeout = 1000;
     p.GroupId = "users_group";
     p.BootstrapServers = "localhost:9092";
     p.SaslMechanism = SaslMechanism.Plain;

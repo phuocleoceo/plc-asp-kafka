@@ -38,14 +38,16 @@ public class BackGroundKafkaConsumer<TKey, TValue> : BackgroundService
 
         while (!cancellationToken.IsCancellationRequested)
         {
-            ConsumeResult<TKey, TValue> result = consumer.Consume(TimeSpan.FromMilliseconds(1000));
+            ConsumeResult<TKey, TValue> result = consumer.Consume(
+                TimeSpan.FromMilliseconds(_kafkaConsumerConfig.Timeout)
+            );
 
             if (result == null)
             {
                 continue;
             }
 
-            await _kafkaConsumerHandler.HandleAsync(result.Message.Key, result.Message.Value);
+            await _kafkaConsumerHandler.HandleAsync(result);
             consumer.Commit(result);
             consumer.StoreOffset(result);
         }

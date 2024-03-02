@@ -12,7 +12,7 @@ internal sealed class KafkaDeserializer<T> : IDeserializer<T>
         {
             if (data.Length > 0)
             {
-                throw new ArgumentException("The data is null not null.");
+                throw new ArgumentException("The Null data is not null.");
             }
             return default;
         }
@@ -22,7 +22,6 @@ internal sealed class KafkaDeserializer<T> : IDeserializer<T>
             return default;
         }
 
-        string dataJson = Encoding.UTF8.GetString(data);
-        return JsonConvert.DeserializeObject<T>(dataJson);
+        return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
     }
 }
