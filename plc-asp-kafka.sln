@@ -1,6 +1,10 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlcKafkaLibrary", "PlcKafkaLibrary\PlcKafkaLibrary.csproj", "{FC92A4DB-14C8-4F66-B830-AF1A9709ED0A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlcKafkaProducer", "PlcKafkaProducer\PlcKafkaProducer.csproj", "{BBECFD06-C0C4-481F-A3B8-6F20DEDBFEDD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlcKafkaConsumer", "PlcKafkaConsumer\PlcKafkaConsumer.csproj", "{6E58F3B9-C479-44B2-8A68-406D34EE9631}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -11,5 +15,13 @@ Global
 		{FC92A4DB-14C8-4F66-B830-AF1A9709ED0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC92A4DB-14C8-4F66-B830-AF1A9709ED0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC92A4DB-14C8-4F66-B830-AF1A9709ED0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBECFD06-C0C4-481F-A3B8-6F20DEDBFEDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBECFD06-C0C4-481F-A3B8-6F20DEDBFEDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBECFD06-C0C4-481F-A3B8-6F20DEDBFEDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBECFD06-C0C4-481F-A3B8-6F20DEDBFEDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E58F3B9-C479-44B2-8A68-406D34EE9631}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E58F3B9-C479-44B2-8A68-406D34EE9631}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E58F3B9-C479-44B2-8A68-406D34EE9631}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E58F3B9-C479-44B2-8A68-406D34EE9631}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
