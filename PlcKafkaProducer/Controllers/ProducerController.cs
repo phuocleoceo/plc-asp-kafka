@@ -21,7 +21,7 @@ public class ProducerController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost]
+    [HttpPost("user")]
     public async Task SendUser([FromBody] User user)
     {
         string topic = "plc-users";
@@ -29,5 +29,15 @@ public class ProducerController : ControllerBase
         await _kafkaMessageBus.PublishAsync(topic, key, user);
 
         _logger.LogInformation($"Produce message {user} with key: {key} to topic: {topic}");
+    }
+
+    [HttpPost("drink")]
+    public async Task SendDrink([FromBody] Drink drink)
+    {
+        string topic = "plc-drinks";
+        string key = Guid.NewGuid().ToString();
+        await _kafkaMessageBus.PublishAsync(topic, key, drink);
+
+        _logger.LogInformation($"Produce message {drink} with key: {key} to topic: {topic}");
     }
 }
