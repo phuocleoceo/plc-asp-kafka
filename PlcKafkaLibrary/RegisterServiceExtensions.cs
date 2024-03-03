@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Confluent.Kafka;
 
@@ -15,6 +16,8 @@ public static class RegisterServiceExtensions
         Action<KafkaProducerConfig<TKey, TValue>> configAction
     )
     {
+        services.Configure(configAction);
+
         services.AddSingleton(serviceProvider =>
         {
             IOptions<KafkaProducerConfig<TKey, TValue>> config = serviceProvider.GetRequiredService<
@@ -30,8 +33,6 @@ public static class RegisterServiceExtensions
 
         services.AddSingleton<KafkaProducer<TKey, TValue>>();
 
-        services.Configure(configAction);
-
         services.AddSingleton(typeof(IKafkaMessageBus<,>), typeof(KafkaMessageBus<,>));
 
         return services;
@@ -43,11 +44,11 @@ public static class RegisterServiceExtensions
     )
         where THandler : class, IKafkaConsumerHandler<TKey, TValue>
     {
+        services.Configure(configAction);
+
         services.AddScoped<IKafkaConsumerHandler<TKey, TValue>, THandler>();
 
-        services.AddHostedService<BackGroundKafkaConsumer<TKey, TValue>>();
-
-        services.Configure(configAction);
+        services.AddSingleton<IHostedService, KafkaConsumerService<TKey, TValue>>();
 
         return services;
     }

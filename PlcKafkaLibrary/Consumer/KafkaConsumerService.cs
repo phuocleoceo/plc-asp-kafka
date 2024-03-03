@@ -7,13 +7,13 @@ using PlcKafkaLibrary.Data;
 
 namespace PlcKafkaLibrary.Consumer;
 
-public class BackGroundKafkaConsumer<TKey, TValue> : BackgroundService
+public class KafkaConsumerService<TKey, TValue> : IHostedService
 {
     private readonly KafkaConsumerConfig<TKey, TValue> _kafkaConsumerConfig;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private IKafkaConsumerHandler<TKey, TValue> _kafkaConsumerHandler;
 
-    public BackGroundKafkaConsumer(
+    public KafkaConsumerService(
         IOptions<KafkaConsumerConfig<TKey, TValue>> kafkaConsumerConfig,
         IServiceScopeFactory serviceScopeFactory
     )
@@ -22,7 +22,13 @@ public class BackGroundKafkaConsumer<TKey, TValue> : BackgroundService
         _kafkaConsumerConfig = kafkaConsumerConfig.Value;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        Task.Run(() => ConsumeMessages(cancellationToken), cancellationToken);
+        return Task.CompletedTask;
+    }
+
+    private async Task ConsumeMessages(CancellationToken cancellationToken)
     {
         using IServiceScope scope = _serviceScopeFactory.CreateScope();
         _kafkaConsumerHandler = scope.ServiceProvider.GetRequiredService<
@@ -51,5 +57,10 @@ public class BackGroundKafkaConsumer<TKey, TValue> : BackgroundService
             consumer.Commit(result);
             consumer.StoreOffset(result);
         }
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
     }
 }
