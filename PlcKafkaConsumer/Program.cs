@@ -17,7 +17,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddKafkaConsumer<string, User, UserHandler>(p =>
 {
     p.Topic = "plc-users";
-    p.Timeout = 1000;
     p.GroupId = "plc_group";
     p.BootstrapServers = "localhost:9092";
     p.SaslMechanism = SaslMechanism.Plain;
@@ -29,7 +28,6 @@ builder.Services.AddKafkaConsumer<string, User, UserHandler>(p =>
 builder.Services.AddKafkaConsumer<string, Drink, DrinkHandler>(p =>
 {
     p.Topic = "plc-drinks";
-    p.Timeout = 1000;
     p.GroupId = "plc_group";
     p.BootstrapServers = "localhost:9092";
     p.SaslMechanism = SaslMechanism.Plain;

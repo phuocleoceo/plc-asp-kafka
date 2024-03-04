@@ -9,6 +9,7 @@ public class KafkaConsumerConfig<TKey, TValue> : ConsumerConfig
 
     public KafkaConsumerConfig()
     {
+        Timeout = 1000;
         AutoOffsetReset = Confluent.Kafka.AutoOffsetReset.Earliest;
         EnableAutoOffsetStore = false;
     }
