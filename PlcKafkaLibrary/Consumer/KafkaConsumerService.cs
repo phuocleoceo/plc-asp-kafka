@@ -2,19 +2,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Confluent.Kafka;
-
+using PlcKafkaLibrary.Configuration;
 using PlcKafkaLibrary.Data;
 
 namespace PlcKafkaLibrary.Consumer;
 
 public class KafkaConsumerService<TKey, TValue> : IHostedService
 {
-    private readonly KafkaConsumerConfig<TKey, TValue> _kafkaConsumerConfig;
+    private readonly KafkaConsumerConfig _kafkaConsumerConfig;
     private readonly IServiceScopeFactory _serviceScopeFactory;
     private IKafkaConsumerHandler<TKey, TValue> _kafkaConsumerHandler;
 
     public KafkaConsumerService(
-        IOptions<KafkaConsumerConfig<TKey, TValue>> kafkaConsumerConfig,
+        IOptions<KafkaConsumerConfig> kafkaConsumerConfig,
         IServiceScopeFactory serviceScopeFactory
     )
     {

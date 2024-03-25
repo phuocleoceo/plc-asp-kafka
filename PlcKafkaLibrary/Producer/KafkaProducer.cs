@@ -1,15 +1,16 @@
 using Microsoft.Extensions.Options;
 using Confluent.Kafka;
+using PlcKafkaLibrary.Configuration;
 
 namespace PlcKafkaLibrary.Producer;
 
 public class KafkaProducer<TKey, TValue> : IDisposable
 {
-    private readonly KafkaProducerConfig<TKey, TValue> _kafkaProducerConfig;
+    private readonly KafkaProducerConfig _kafkaProducerConfig;
     private readonly IProducer<TKey, TValue> _producer;
 
     public KafkaProducer(
-        IOptions<KafkaProducerConfig<TKey, TValue>> kafkaProducerConfig,
+        IOptions<KafkaProducerConfig> kafkaProducerConfig,
         IProducer<TKey, TValue> producer
     )
     {

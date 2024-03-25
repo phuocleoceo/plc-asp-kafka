@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddKafkaConnection(builder.Configuration);
 builder.Services.AddKafkaProducer<string, object>(p =>
 {
     p.BootstrapServers = "localhost:9092";
