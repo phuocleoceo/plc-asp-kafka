@@ -1,11 +1,12 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Confluent.Kafka;
-using Microsoft.Extensions.Configuration;
+
 using PlcKafkaLibrary.Configuration;
-using PlcKafkaLibrary.Consumer;
 using PlcKafkaLibrary.Producer;
+using PlcKafkaLibrary.Consumer;
 using PlcKafkaLibrary.Data;
 
 namespace PlcKafkaLibrary;
@@ -17,25 +18,23 @@ public static class RegisterServiceExtensions
         IConfiguration configuration
     )
     {
-        KafkaConfig kafkaConfig = configuration.GetSection("Kafka").Get<KafkaConfig>();
+        // KafkaConfig kafkaConfig = configuration.GetSection("Kafka").Get<KafkaConfig>();
+        services.Configure<KafkaConfig>(configuration.GetSection("Kafka"));
         return services;
     }
 
     public static IServiceCollection AddKafkaProducer<TKey, TValue>(
-        this IServiceCollection services,
-        Action<KafkaProducerConfig> configAction
+        this IServiceCollection services
     )
     {
-        services.Configure(configAction);
-
         services.AddSingleton(serviceProvider =>
         {
-            IOptions<KafkaProducerConfig> config = serviceProvider.GetRequiredService<
-                IOptions<KafkaProducerConfig>
-            >();
+            KafkaConfig kafkaConfig = serviceProvider
+                .GetRequiredService<IOptions<KafkaConfig>>()
+                .Value;
 
             ProducerBuilder<TKey, TValue> builder = new ProducerBuilder<TKey, TValue>(
-                config.Value
+                kafkaConfig.ProducerConfig()
             ).SetValueSerializer(new KafkaSerializer<TValue>());
 
             return builder.Build();
@@ -49,13 +48,10 @@ public static class RegisterServiceExtensions
     }
 
     public static IServiceCollection AddKafkaConsumer<TKey, TValue, THandler>(
-        this IServiceCollection services,
-        Action<KafkaConsumerConfig> configAction
+        this IServiceCollection services
     )
         where THandler : class, IKafkaConsumerHandler<TKey, TValue>
     {
-        services.Configure(configAction);
-
         services.AddScoped<IKafkaConsumerHandler<TKey, TValue>, THandler>();
 
         services.AddSingleton<IHostedService, KafkaConsumerService<TKey, TValue>>();

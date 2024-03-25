@@ -14,26 +14,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddKafkaConnection(builder.Configuration);
+
 builder.Services.AddKafkaConsumer<string, User, UserHandler>(p =>
 {
     p.Topic = "plc-users";
-    p.GroupId = "plc_group";
-    p.BootstrapServers = "localhost:9092";
-    p.SaslMechanism = SaslMechanism.Plain;
-    p.SecurityProtocol = SecurityProtocol.SaslPlaintext;
-    p.SaslUsername = "admin";
-    p.SaslPassword = "admin-secret";
 });
 
 builder.Services.AddKafkaConsumer<string, Drink, DrinkHandler>(p =>
 {
     p.Topic = "plc-drinks";
-    p.GroupId = "plc_group";
-    p.BootstrapServers = "localhost:9092";
-    p.SaslMechanism = SaslMechanism.Plain;
-    p.SecurityProtocol = SecurityProtocol.SaslPlaintext;
-    p.SaslUsername = "admin";
-    p.SaslPassword = "admin-secret";
 });
 
 var app = builder.Build();
