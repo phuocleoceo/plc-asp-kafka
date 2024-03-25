@@ -1,8 +1,8 @@
 using Confluent.Kafka;
 
-namespace PlcKafkaLibrary.Producer;
+namespace PlcKafkaLibrary.Configuration;
 
-public class KafkaProducerConfig<TKey, TValue> : ProducerConfig
+public class KafkaProducerConfig : ProducerConfig
 {
     public KafkaProducerConfig()
     {

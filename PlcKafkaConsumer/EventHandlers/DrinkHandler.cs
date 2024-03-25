@@ -13,6 +13,8 @@ public class DrinkHandler : IKafkaConsumerHandler<string, Drink>
         _logger = logger;
     }
 
+    public string Topic => "plc-drinks";
+
     public async Task HandleAsync(ConsumeResult<string, Drink> result)
     {
         string topic = result.Topic;

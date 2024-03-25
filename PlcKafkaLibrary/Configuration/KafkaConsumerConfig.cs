@@ -1,10 +1,9 @@
 using Confluent.Kafka;
 
-namespace PlcKafkaLibrary.Consumer;
+namespace PlcKafkaLibrary.Configuration;
 
-public class KafkaConsumerConfig<TKey, TValue> : ConsumerConfig
+public class KafkaConsumerConfig : ConsumerConfig
 {
-    public string Topic { get; set; }
     public double Timeout { get; set; }
 
     public KafkaConsumerConfig()

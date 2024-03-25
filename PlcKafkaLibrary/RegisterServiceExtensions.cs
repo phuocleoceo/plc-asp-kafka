@@ -1,55 +1,40 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Confluent.Kafka;
 
-using PlcKafkaLibrary.Consumer;
+using PlcKafkaLibrary.Configuration;
 using PlcKafkaLibrary.Producer;
-using PlcKafkaLibrary.Data;
+using PlcKafkaLibrary.Consumer;
 
 namespace PlcKafkaLibrary;
 
 public static class RegisterServiceExtensions
 {
-    public static IServiceCollection AddKafkaProducer<TKey, TValue>(
+    public static IServiceCollection AddKafkaConnection(
         this IServiceCollection services,
-        Action<KafkaProducerConfig<TKey, TValue>> configAction
+        IConfiguration configuration
     )
     {
-        services.Configure(configAction);
+        services.Configure<KafkaConfig>(configuration.GetSection("Kafka"));
+        return services;
+    }
 
-        services.AddSingleton(serviceProvider =>
-        {
-            IOptions<KafkaProducerConfig<TKey, TValue>> config = serviceProvider.GetRequiredService<
-                IOptions<KafkaProducerConfig<TKey, TValue>>
-            >();
-
-            ProducerBuilder<TKey, TValue> builder = new ProducerBuilder<TKey, TValue>(
-                config.Value
-            ).SetValueSerializer(new KafkaSerializer<TValue>());
-
-            return builder.Build();
-        });
-
+    public static IServiceCollection AddKafkaProducer<TKey, TValue>(
+        this IServiceCollection services
+    )
+    {
         services.AddSingleton<KafkaProducer<TKey, TValue>>();
-
         services.AddSingleton(typeof(IKafkaMessageBus<,>), typeof(KafkaMessageBus<,>));
-
         return services;
     }
 
     public static IServiceCollection AddKafkaConsumer<TKey, TValue, THandler>(
-        this IServiceCollection services,
-        Action<KafkaConsumerConfig<TKey, TValue>> configAction
+        this IServiceCollection services
     )
         where THandler : class, IKafkaConsumerHandler<TKey, TValue>
     {
-        services.Configure(configAction);
-
         services.AddScoped<IKafkaConsumerHandler<TKey, TValue>, THandler>();
-
         services.AddSingleton<IHostedService, KafkaConsumerService<TKey, TValue>>();
-
         return services;
     }
 }

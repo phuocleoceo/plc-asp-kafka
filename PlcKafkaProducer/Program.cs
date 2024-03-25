@@ -1,5 +1,3 @@
-using Confluent.Kafka;
-
 using PlcKafkaLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,14 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddKafkaProducer<string, object>(p =>
-{
-    p.BootstrapServers = "localhost:9092";
-    p.SaslMechanism = SaslMechanism.Plain;
-    p.SecurityProtocol = SecurityProtocol.SaslPlaintext;
-    p.SaslUsername = "admin";
-    p.SaslPassword = "admin-secret";
-});
+builder.Services.AddKafkaConnection(builder.Configuration);
+builder.Services.AddKafkaProducer<string, object>();
 
 var app = builder.Build();
 
