@@ -13,6 +13,8 @@ public class UserHandler : IKafkaConsumerHandler<string, User>
         _logger = logger;
     }
 
+    public string Topic => "plc-users";
+
     public async Task HandleAsync(ConsumeResult<string, User> result)
     {
         string topic = result.Topic;

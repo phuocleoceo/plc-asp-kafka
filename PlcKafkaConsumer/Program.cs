@@ -1,5 +1,3 @@
-using Confluent.Kafka;
-
 using PlcKafkaConsumer.EventHandlers;
 using PlcKafkaProducer.Models;
 using PlcKafkaLibrary;
@@ -15,16 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddKafkaConnection(builder.Configuration);
-
-builder.Services.AddKafkaConsumer<string, User, UserHandler>(p =>
-{
-    p.Topic = "plc-users";
-});
-
-builder.Services.AddKafkaConsumer<string, Drink, DrinkHandler>(p =>
-{
-    p.Topic = "plc-drinks";
-});
+builder.Services.AddKafkaConsumer<string, User, UserHandler>();
+builder.Services.AddKafkaConsumer<string, Drink, DrinkHandler>();
 
 var app = builder.Build();
 

@@ -1,5 +1,3 @@
-using Confluent.Kafka;
-
 using PlcKafkaLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
