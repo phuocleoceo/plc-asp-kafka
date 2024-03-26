@@ -29,17 +29,38 @@ public class KafkaProducer<TKey, TValue> : IDisposable
             .Build();
     }
 
-    public async Task ProduceAsync(string topic, TKey key, TValue value)
+    public async Task ProduceAsync(
+        string topic,
+        TKey key,
+        TValue value,
+        Dictionary<string, byte[]> headers = null
+    )
     {
         KafkaTopicConfig kafkaTopicConfig = _kafkaTopicConfigs[topic];
+
         if (kafkaTopicConfig == null || string.IsNullOrWhiteSpace(kafkaTopicConfig.Name))
         {
             return;
         }
 
+        Headers kafkaHeaders = new Headers();
+
+        if (headers != null)
+        {
+            foreach (var (headerKey, headerValue) in headers)
+            {
+                kafkaHeaders.Add(headerKey, headerValue);
+            }
+        }
+
         await _producer.ProduceAsync(
             kafkaTopicConfig.Name,
-            new Message<TKey, TValue> { Key = key, Value = value }
+            new Message<TKey, TValue>
+            {
+                Key = key,
+                Value = value,
+                Headers = kafkaHeaders
+            }
         );
     }
 

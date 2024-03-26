@@ -11,6 +11,7 @@ public class KafkaConsumeResult<TKey, TValue>
     public long Offset { get; set; }
     public int? LeaderEpoch { get; set; }
     public bool IsPartitionEof { get; set; }
+    public Dictionary<string, byte[]> Headers { get; set; }
 
     public KafkaConsumeResult(ConsumeResult<TKey, TValue> consumeResult)
     {
@@ -21,5 +22,9 @@ public class KafkaConsumeResult<TKey, TValue>
         Offset = consumeResult.Offset.Value;
         LeaderEpoch = consumeResult.LeaderEpoch;
         IsPartitionEof = consumeResult.IsPartitionEOF;
+        Headers = consumeResult.Message.Headers.BackingList.ToDictionary(
+            header => header.Key,
+            header => header.GetValueBytes()
+        );
     }
 }

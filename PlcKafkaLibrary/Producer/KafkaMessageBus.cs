@@ -9,8 +9,13 @@ public class KafkaMessageBus<TKey, TValue> : IKafkaMessageBus<TKey, TValue>
         _producer = producer;
     }
 
-    public async Task PublishAsync(string topic, TKey key, TValue message)
+    public async Task PublishAsync(
+        string topic,
+        TKey key,
+        TValue message,
+        Dictionary<string, byte[]> headers = null
+    )
     {
-        await _producer.ProduceAsync(topic, key, message);
+        await _producer.ProduceAsync(topic, key, message, headers);
     }
 }
