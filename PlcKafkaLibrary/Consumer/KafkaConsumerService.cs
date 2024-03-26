@@ -69,7 +69,7 @@ public class KafkaConsumerService<TKey, TValue> : IHostedService
                 continue;
             }
 
-            await _kafkaConsumerHandler.HandleAsync(result);
+            await _kafkaConsumerHandler.HandleAsync(new KafkaConsumeResult<TKey, TValue>(result));
             consumer.Commit(result);
             consumer.StoreOffset(result);
         }
