@@ -24,7 +24,7 @@ public class ProducerController : ControllerBase
     [HttpPost("user")]
     public async Task SendUser([FromBody] User user)
     {
-        string topic = "plc-users";
+        string topic = "User";
         string key = Guid.NewGuid().ToString();
         await _kafkaMessageBus.PublishAsync(topic, key, user);
 
@@ -34,7 +34,7 @@ public class ProducerController : ControllerBase
     [HttpPost("drink")]
     public async Task SendDrink([FromBody] Drink drink)
     {
-        string topic = "plc-drinks";
+        string topic = "Drink";
         string key = Guid.NewGuid().ToString();
         await _kafkaMessageBus.PublishAsync(topic, key, drink);
 

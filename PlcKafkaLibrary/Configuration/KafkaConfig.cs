@@ -11,7 +11,7 @@ public class KafkaConfig
     public string SaslPassword { get; set; }
     public KafkaProducerConfig Producer { get; set; } = new();
     public KafkaConsumerConfig Consumer { get; set; } = new();
-    public Dictionary<string, KafkaTopicConfig> Topics { get; set; } = new();
+    public Dictionary<string, KafkaTopicConfig> Topic { get; set; } = new();
 
     public KafkaProducerConfig ProducerConfig
     {
@@ -38,4 +38,14 @@ public class KafkaConfig
             return Consumer;
         }
     }
+
+    public KafkaAdminClientConfig AdminClientConfig =>
+        new()
+        {
+            BootstrapServers = BootstrapServers,
+            SaslMechanism = SaslMechanism,
+            SecurityProtocol = SecurityProtocol,
+            SaslUsername = SaslUsername,
+            SaslPassword = SaslPassword,
+        };
 }
