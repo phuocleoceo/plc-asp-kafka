@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 
 using PlcKafkaLibrary.Producer;
@@ -26,8 +27,10 @@ public class ProducerController : ControllerBase
     {
         string topic = "User";
         string key = Guid.NewGuid().ToString();
-        await _kafkaMessageBus.PublishAsync(topic, key, user);
+        Dictionary<string, byte[]> headers = new Dictionary<string, byte[]>();
+        headers.Add("event", Encoding.UTF8.GetBytes("user"));
 
+        await _kafkaMessageBus.PublishAsync(topic, key, user, headers);
         _logger.LogInformation($"Produce message {user} with key: {key} to topic: {topic}");
     }
 
@@ -36,8 +39,8 @@ public class ProducerController : ControllerBase
     {
         string topic = "Drink";
         string key = Guid.NewGuid().ToString();
-        await _kafkaMessageBus.PublishAsync(topic, key, drink);
 
+        await _kafkaMessageBus.PublishAsync(topic, key, drink);
         _logger.LogInformation($"Produce message {drink} with key: {key} to topic: {topic}");
     }
 }

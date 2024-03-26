@@ -1,3 +1,4 @@
+using System.Text;
 using PlcKafkaLibrary.Consumer;
 using PlcKafkaProducer.Models;
 
@@ -19,10 +20,19 @@ public class UserHandler : IKafkaConsumerHandler<string, User>
         string topic = result.Topic;
         string key = result.Key;
         User user = result.Value;
+        Dictionary<string, byte[]> headers = result.Headers;
 
         _logger.LogInformation(
             $"Consume event from topic: {topic} for key: {key} with value: {user}"
         );
+
+        foreach (var (headerKey, headerValue) in headers)
+        {
+            _logger.LogInformation(
+                $"Header key: {headerKey}, value: {Encoding.UTF8.GetString(headerValue)}"
+            );
+        }
+
         await Task.CompletedTask;
     }
 }
