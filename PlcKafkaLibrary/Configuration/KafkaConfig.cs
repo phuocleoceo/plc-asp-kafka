@@ -24,6 +24,7 @@ public class KafkaConfig
             Producer.SecurityProtocol = SecurityProtocol;
             Producer.SaslUsername = SaslUsername;
             Producer.SaslPassword = SaslPassword;
+            Producer.MessageTimeoutMs = Producer.DeliveryTimeoutMs;
             return Producer;
         }
     }

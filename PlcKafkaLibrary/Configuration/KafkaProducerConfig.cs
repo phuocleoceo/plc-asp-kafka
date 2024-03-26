@@ -4,6 +4,8 @@ namespace PlcKafkaLibrary.Configuration;
 
 public class KafkaProducerConfig : ProducerConfig
 {
+    public int DeliveryTimeoutMs { get; set; } = 120000; // 2 minutes
+
     public KafkaProducerConfig()
     {
         Acks = Confluent.Kafka.Acks.All;
