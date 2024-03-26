@@ -4,7 +4,7 @@ namespace PlcKafkaLibrary.Configuration;
 
 public class KafkaConfig
 {
-    public string BootstrapServers { get; set; } = "localhost:9092";
+    public List<string> BootstrapServers { get; set; } = new() { "localhost:9092" };
     public SaslMechanism SaslMechanism { get; set; } = SaslMechanism.Plain;
     public SecurityProtocol SecurityProtocol { get; set; }
     public string SaslUsername { get; set; }
@@ -13,11 +13,13 @@ public class KafkaConfig
     public KafkaConsumerConfig Consumer { get; set; } = new();
     public Dictionary<string, KafkaTopicConfig> Topic { get; set; } = new();
 
+    private string BootstrapServerStrings => string.Join(",", BootstrapServers);
+
     public KafkaProducerConfig ProducerConfig
     {
         get
         {
-            Producer.BootstrapServers = BootstrapServers;
+            Producer.BootstrapServers = BootstrapServerStrings;
             Producer.SaslMechanism = SaslMechanism;
             Producer.SecurityProtocol = SecurityProtocol;
             Producer.SaslUsername = SaslUsername;
@@ -30,7 +32,7 @@ public class KafkaConfig
     {
         get
         {
-            Consumer.BootstrapServers = BootstrapServers;
+            Consumer.BootstrapServers = BootstrapServerStrings;
             Consumer.SaslMechanism = SaslMechanism;
             Consumer.SecurityProtocol = SecurityProtocol;
             Consumer.SaslUsername = SaslUsername;
@@ -42,7 +44,7 @@ public class KafkaConfig
     public KafkaAdminClientConfig AdminClientConfig =>
         new()
         {
-            BootstrapServers = BootstrapServers,
+            BootstrapServers = BootstrapServerStrings,
             SaslMechanism = SaslMechanism,
             SecurityProtocol = SecurityProtocol,
             SaslUsername = SaslUsername,
