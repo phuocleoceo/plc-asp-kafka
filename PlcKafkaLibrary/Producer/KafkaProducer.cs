@@ -1,6 +1,7 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Confluent.Kafka;
-using Microsoft.Extensions.Logging;
+
 using PlcKafkaLibrary.Configuration;
 using PlcKafkaLibrary.Data;
 
@@ -8,8 +9,10 @@ namespace PlcKafkaLibrary.Producer;
 
 public class KafkaProducer<TKey, TValue> : IDisposable
 {
-    private readonly ILogger<KafkaProducer<TKey, TValue>> _logger;
+    private readonly Dictionary<string, KafkaTopicConfig> _kafkaTopicConfigs;
     private readonly KafkaProducerConfig _kafkaProducerConfig;
+
+    private readonly ILogger<KafkaProducer<TKey, TValue>> _logger;
     private readonly IProducer<TKey, TValue> _producer;
 
     public KafkaProducer(
@@ -18,7 +21,9 @@ public class KafkaProducer<TKey, TValue> : IDisposable
     )
     {
         _logger = logger;
+        _kafkaTopicConfigs = kafkaConfig.Value.Topic;
         _kafkaProducerConfig = kafkaConfig.Value.ProducerConfig;
+
         _producer = new ProducerBuilder<TKey, TValue>(_kafkaProducerConfig)
             .SetValueSerializer(new KafkaSerializer<TValue>())
             .Build();
@@ -26,7 +31,16 @@ public class KafkaProducer<TKey, TValue> : IDisposable
 
     public async Task ProduceAsync(string topic, TKey key, TValue value)
     {
-        await _producer.ProduceAsync(topic, new Message<TKey, TValue> { Key = key, Value = value });
+        KafkaTopicConfig kafkaTopicConfig = _kafkaTopicConfigs[topic];
+        if (kafkaTopicConfig == null || string.IsNullOrWhiteSpace(kafkaTopicConfig.Name))
+        {
+            return;
+        }
+
+        await _producer.ProduceAsync(
+            kafkaTopicConfig.Name,
+            new Message<TKey, TValue> { Key = key, Value = value }
+        );
     }
 
     public void Dispose()

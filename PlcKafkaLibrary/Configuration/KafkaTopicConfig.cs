@@ -3,7 +3,7 @@ namespace PlcKafkaLibrary.Configuration;
 public class KafkaTopicConfig
 {
     public string Name { get; set; }
-    public int Partitions { get; set; } = 1;
+    public int NumPartitions { get; set; } = 1;
     public int ReplicationFactor { get; set; } = 1;
     public int ConsumerRetries { get; set; } = 3;
     public int ConsumerRetryDelayInMs { get; set; } = 7200000; // 2 hours

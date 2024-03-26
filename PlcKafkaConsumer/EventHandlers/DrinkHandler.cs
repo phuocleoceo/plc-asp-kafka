@@ -1,4 +1,3 @@
-using Confluent.Kafka;
 using PlcKafkaLibrary.Consumer;
 using PlcKafkaProducer.Models;
 
@@ -13,13 +12,13 @@ public class DrinkHandler : IKafkaConsumerHandler<string, Drink>
         _logger = logger;
     }
 
-    public string Topic => "plc-drinks";
+    public string Topic => "Drink";
 
-    public async Task HandleAsync(ConsumeResult<string, Drink> result)
+    public async Task HandleAsync(KafkaConsumeResult<string, Drink> result)
     {
         string topic = result.Topic;
-        string key = result.Message.Key;
-        Drink drink = result.Message.Value;
+        string key = result.Key;
+        Drink drink = result.Value;
 
         _logger.LogInformation(
             $"Consume event from topic: {topic} for key: {key} with value: {drink}"

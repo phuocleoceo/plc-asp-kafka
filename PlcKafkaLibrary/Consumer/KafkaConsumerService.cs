@@ -1,8 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Confluent.Kafka;
-using Microsoft.Extensions.Logging;
+
 using PlcKafkaLibrary.Configuration;
 using PlcKafkaLibrary.Data;
 
@@ -10,9 +11,12 @@ namespace PlcKafkaLibrary.Consumer;
 
 public class KafkaConsumerService<TKey, TValue> : IHostedService
 {
+    private readonly Dictionary<string, KafkaTopicConfig> _kafkaTopicConfigs;
     private readonly KafkaConsumerConfig _kafkaConsumerConfig;
-    private readonly IServiceScopeFactory _serviceScopeFactory;
+
     private readonly ILogger<KafkaConsumerService<TKey, TValue>> _logger;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
+
     private IKafkaConsumerHandler<TKey, TValue> _kafkaConsumerHandler;
 
     public KafkaConsumerService(
@@ -23,6 +27,7 @@ public class KafkaConsumerService<TKey, TValue> : IHostedService
     {
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
+        _kafkaTopicConfigs = kafkaConfig.Value.Topic;
         _kafkaConsumerConfig = kafkaConfig.Value.ConsumerConfig;
     }
 
@@ -40,12 +45,18 @@ public class KafkaConsumerService<TKey, TValue> : IHostedService
             IKafkaConsumerHandler<TKey, TValue>
         >();
 
+        KafkaTopicConfig kafkaTopicConfig = _kafkaTopicConfigs[_kafkaConsumerHandler.Topic];
+        if (kafkaTopicConfig == null || string.IsNullOrWhiteSpace(kafkaTopicConfig.Name))
+        {
+            return;
+        }
+
         ConsumerBuilder<TKey, TValue> builder = new ConsumerBuilder<TKey, TValue>(
             _kafkaConsumerConfig
         ).SetValueDeserializer(new KafkaDeserializer<TValue>());
 
         using IConsumer<TKey, TValue> consumer = builder.Build();
-        consumer.Subscribe(_kafkaConsumerHandler.Topic);
+        consumer.Subscribe(kafkaTopicConfig.Name);
 
         while (!cancellationToken.IsCancellationRequested)
         {
@@ -58,7 +69,7 @@ public class KafkaConsumerService<TKey, TValue> : IHostedService
                 continue;
             }
 
-            await _kafkaConsumerHandler.HandleAsync(result);
+            await _kafkaConsumerHandler.HandleAsync(new KafkaConsumeResult<TKey, TValue>(result));
             consumer.Commit(result);
             consumer.StoreOffset(result);
         }
