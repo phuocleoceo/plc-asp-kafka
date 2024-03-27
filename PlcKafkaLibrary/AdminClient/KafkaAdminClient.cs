@@ -1,9 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
-using Confluent.Kafka;
 using Microsoft.Extensions.Options;
+using Confluent.Kafka;
+
 using PlcKafkaLibrary.Configuration;
 
-namespace PlcKafkaLibrary.Admin;
+namespace PlcKafkaLibrary.AdminClient;
 
 public static class KafkaAdminClient
 {

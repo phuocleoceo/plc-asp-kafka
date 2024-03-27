@@ -9,11 +9,25 @@ public class KafkaConfig
     public SecurityProtocol SecurityProtocol { get; set; }
     public string SaslUsername { get; set; }
     public string SaslPassword { get; set; }
+    public KafkaAdminClientConfig AdminClient { get; set; } = new();
     public KafkaProducerConfig Producer { get; set; } = new();
     public KafkaConsumerConfig Consumer { get; set; } = new();
     public Dictionary<string, KafkaTopicConfig> Topic { get; set; } = new();
 
     private string BootstrapServerStrings => string.Join(",", BootstrapServers);
+
+    public KafkaAdminClientConfig AdminClientConfig
+    {
+        get
+        {
+            AdminClient.BootstrapServers = BootstrapServerStrings;
+            AdminClient.SaslMechanism = SaslMechanism;
+            AdminClient.SecurityProtocol = SecurityProtocol;
+            AdminClient.SaslUsername = SaslUsername;
+            AdminClient.SaslPassword = SaslPassword;
+            return AdminClient;
+        }
+    }
 
     public KafkaProducerConfig ProducerConfig
     {
@@ -41,14 +55,4 @@ public class KafkaConfig
             return Consumer;
         }
     }
-
-    public KafkaAdminClientConfig AdminClientConfig =>
-        new()
-        {
-            BootstrapServers = BootstrapServerStrings,
-            SaslMechanism = SaslMechanism,
-            SecurityProtocol = SecurityProtocol,
-            SaslUsername = SaslUsername,
-            SaslPassword = SaslPassword,
-        };
 }

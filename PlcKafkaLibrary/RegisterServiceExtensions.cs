@@ -3,9 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 using PlcKafkaLibrary.Configuration;
+using PlcKafkaLibrary.AdminClient;
 using PlcKafkaLibrary.Consumer;
 using PlcKafkaLibrary.Producer;
-using PlcKafkaLibrary.Admin;
 
 namespace PlcKafkaLibrary;
 
@@ -20,10 +20,10 @@ public static class RegisterServiceExtensions
 
         services.ConfigureKafkaAdminClient();
 
-        services.AddSingleton<KafkaCreateTopic>();
+        services.AddSingleton<KafkaInitializer>();
         ServiceProvider serviceProvider = services.BuildServiceProvider();
-        KafkaCreateTopic kafkaCreateTopic = serviceProvider.GetService<KafkaCreateTopic>();
-        kafkaCreateTopic.CreateTopic().Wait();
+        KafkaInitializer kafkaInitializer = serviceProvider.GetService<KafkaInitializer>();
+        kafkaInitializer.Initialize().Wait();
 
         return services;
     }
