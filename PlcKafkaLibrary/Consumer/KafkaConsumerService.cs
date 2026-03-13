@@ -1,35 +1,22 @@
+using Confluent.Kafka;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Confluent.Kafka;
-
 using PlcKafkaLibrary.Configuration;
 using PlcKafkaLibrary.Data;
 
 namespace PlcKafkaLibrary.Consumer;
 
-public class KafkaConsumerService<TKey, TValue> : IHostedService
+public class KafkaConsumerService<TKey, TValue>(
+    IServiceScopeFactory serviceScopeFactory,
+    IOptions<KafkaConfig> kafkaConfig
+) : IHostedService
 {
-    private readonly Dictionary<string, KafkaTopicConfig> _kafkaTopicConfigs;
-    private readonly KafkaConsumerConfig _kafkaConsumerConfig;
-
-    private readonly ILogger<KafkaConsumerService<TKey, TValue>> _logger;
-    private readonly IServiceScopeFactory _serviceScopeFactory;
-
+    private readonly Dictionary<string, KafkaTopicConfig> _kafkaTopicConfigs = kafkaConfig
+        .Value
+        .Topic;
+    private readonly KafkaConsumerConfig _kafkaConsumerConfig = kafkaConfig.Value.ConsumerConfig;
     private IKafkaConsumerHandler<TKey, TValue> _kafkaConsumerHandler;
-
-    public KafkaConsumerService(
-        ILogger<KafkaConsumerService<TKey, TValue>> logger,
-        IServiceScopeFactory serviceScopeFactory,
-        IOptions<KafkaConfig> kafkaConfig
-    )
-    {
-        _logger = logger;
-        _serviceScopeFactory = serviceScopeFactory;
-        _kafkaTopicConfigs = kafkaConfig.Value.Topic;
-        _kafkaConsumerConfig = kafkaConfig.Value.ConsumerConfig;
-    }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -39,7 +26,7 @@ public class KafkaConsumerService<TKey, TValue> : IHostedService
 
     private async Task ConsumeMessages(CancellationToken cancellationToken)
     {
-        using IServiceScope scope = _serviceScopeFactory.CreateScope();
+        using IServiceScope scope = serviceScopeFactory.CreateScope();
 
         _kafkaConsumerHandler = scope.ServiceProvider.GetRequiredService<
             IKafkaConsumerHandler<TKey, TValue>

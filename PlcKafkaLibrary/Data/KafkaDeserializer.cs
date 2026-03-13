@@ -1,6 +1,6 @@
-using Newtonsoft.Json;
-using Confluent.Kafka;
 using System.Text;
+using Confluent.Kafka;
+using Newtonsoft.Json;
 
 namespace PlcKafkaLibrary.Data;
 

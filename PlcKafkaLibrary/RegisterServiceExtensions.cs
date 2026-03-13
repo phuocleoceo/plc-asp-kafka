@@ -1,9 +1,8 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-using PlcKafkaLibrary.Configuration;
 using PlcKafkaLibrary.AdminClient;
+using PlcKafkaLibrary.Configuration;
 using PlcKafkaLibrary.Consumer;
 using PlcKafkaLibrary.Producer;
 
@@ -19,11 +18,8 @@ public static class RegisterServiceExtensions
         services.Configure<KafkaConfig>(configuration.GetSection("Kafka"));
 
         services.ConfigureKafkaAdminClient();
-
         services.AddSingleton<KafkaInitializer>();
-        ServiceProvider serviceProvider = services.BuildServiceProvider();
-        KafkaInitializer kafkaInitializer = serviceProvider.GetService<KafkaInitializer>();
-        kafkaInitializer.Initialize().Wait();
+        services.AddHostedService<KafkaInitializerService>();
 
         return services;
     }

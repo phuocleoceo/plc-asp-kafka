@@ -1,5 +1,5 @@
 using PlcKafkaConsumer.EventHandlers;
-using PlcKafkaProducer.Models;
+using PlcKafkaConsumer.Models;
 using PlcKafkaLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
