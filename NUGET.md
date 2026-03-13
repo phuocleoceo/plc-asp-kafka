@@ -8,13 +8,19 @@
 </PropertyGroup>
 ```
 
-## 2. Pack the library
+## 2. Build the library
+
+```bash
+dotnet build PlcKafkaLibrary/PlcKafkaLibrary.csproj -c Release
+```
+
+## 3. Pack the library
 
 ```bash
 dotnet pack PlcKafkaLibrary/PlcKafkaLibrary.csproj -c Release -o ./out/nuget
 ```
 
-## 3. Push to Nuget Gallery
+## 4. Push to Nuget Gallery
 
 ```bash
 dotnet nuget push out/nuget/PlcKafkaLibrary.2.0.0.nupkg --api-key <NUGET_API_KEY> --source https://api.nuget.org/v3/index.json
