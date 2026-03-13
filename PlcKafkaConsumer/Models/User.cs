@@ -1,4 +1,4 @@
-namespace PlcKafkaProducer.Models;
+namespace PlcKafkaConsumer.Models;
 
 public class User
 {

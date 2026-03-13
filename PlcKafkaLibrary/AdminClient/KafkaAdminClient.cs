@@ -1,7 +1,6 @@
+using Confluent.Kafka;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Confluent.Kafka;
-
 using PlcKafkaLibrary.Configuration;
 
 namespace PlcKafkaLibrary.AdminClient;

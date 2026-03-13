@@ -4,15 +4,16 @@ namespace PlcKafkaLibrary.Configuration;
 
 public class KafkaConfig
 {
-    public List<string> BootstrapServers { get; set; } = new() { "localhost:9092" };
+    public List<string> BootstrapServers { get; set; } = ["localhost:9092"];
     public SaslMechanism SaslMechanism { get; set; } = SaslMechanism.Plain;
     public SecurityProtocol SecurityProtocol { get; set; }
     public string SaslUsername { get; set; }
     public string SaslPassword { get; set; }
+    public BrokerAddressFamily? BrokerAddressFamily { get; set; }
     public KafkaAdminClientConfig AdminClient { get; set; } = new();
     public KafkaProducerConfig Producer { get; set; } = new();
     public KafkaConsumerConfig Consumer { get; set; } = new();
-    public Dictionary<string, KafkaTopicConfig> Topic { get; set; } = new();
+    public Dictionary<string, KafkaTopicConfig> Topic { get; set; } = [];
 
     private string BootstrapServerStrings => string.Join(",", BootstrapServers);
 
@@ -25,6 +26,10 @@ public class KafkaConfig
             AdminClient.SecurityProtocol = SecurityProtocol;
             AdminClient.SaslUsername = SaslUsername;
             AdminClient.SaslPassword = SaslPassword;
+            if (BrokerAddressFamily.HasValue)
+            {
+                AdminClient.BrokerAddressFamily = BrokerAddressFamily.Value;
+            }
             return AdminClient;
         }
     }
@@ -39,6 +44,10 @@ public class KafkaConfig
             Producer.SaslUsername = SaslUsername;
             Producer.SaslPassword = SaslPassword;
             Producer.MessageTimeoutMs = Producer.DeliveryTimeoutMs;
+            if (BrokerAddressFamily.HasValue)
+            {
+                Producer.BrokerAddressFamily = BrokerAddressFamily.Value;
+            }
             return Producer;
         }
     }
@@ -52,6 +61,10 @@ public class KafkaConfig
             Consumer.SecurityProtocol = SecurityProtocol;
             Consumer.SaslUsername = SaslUsername;
             Consumer.SaslPassword = SaslPassword;
+            if (BrokerAddressFamily.HasValue)
+            {
+                Consumer.BrokerAddressFamily = BrokerAddressFamily.Value;
+            }
             return Consumer;
         }
     }

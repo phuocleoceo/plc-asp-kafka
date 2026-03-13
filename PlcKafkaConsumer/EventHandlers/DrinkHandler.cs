@@ -1,17 +1,10 @@
+using PlcKafkaConsumer.Models;
 using PlcKafkaLibrary.Consumer;
-using PlcKafkaProducer.Models;
 
 namespace PlcKafkaConsumer.EventHandlers;
 
-public class DrinkHandler : IKafkaConsumerHandler<string, Drink>
+public class DrinkHandler(ILogger<DrinkHandler> logger) : IKafkaConsumerHandler<string, Drink>
 {
-    private readonly ILogger<DrinkHandler> _logger;
-
-    public DrinkHandler(ILogger<DrinkHandler> logger)
-    {
-        _logger = logger;
-    }
-
     public string Topic => "Drink";
 
     public async Task HandleAsync(KafkaConsumeResult<string, Drink> result)
@@ -20,7 +13,7 @@ public class DrinkHandler : IKafkaConsumerHandler<string, Drink>
         string key = result.Key;
         Drink drink = result.Value;
 
-        _logger.LogInformation(
+        logger.LogInformation(
             $"Consume event from topic: {topic} for key: {key} with value: {drink}"
         );
         await Task.CompletedTask;

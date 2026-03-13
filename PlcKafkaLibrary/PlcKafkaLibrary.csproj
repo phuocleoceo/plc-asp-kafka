@@ -1,28 +1,30 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>PlcKafkaLibrary</Title>
+    <Authors>phuocleoceo</Authors>
+    <Copyright>phuocleoceo</Copyright>
+    <PackageIcon>PLC-Kafka.png</PackageIcon>
+    <Version>2.0.0</Version>
+    <Description>A AutoConfigure Kafka library for ASP.NET applications</Description>
+    <PackageProjectUrl>https://github.com/phuocleoceo/plc-asp-kafka</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/phuocleoceo/plc-asp-kafka</RepositoryUrl>
+    <!--        <Nullable>enable</Nullable>-->
+  </PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Title>PlcKafkaLibrary</Title>
-        <Authors>phuocleoceo</Authors>
-        <Copyright>phuocleoceo</Copyright>
-        <PackageIcon>PLC-Kafka.png</PackageIcon>
-<!--        <Nullable>enable</Nullable>-->
-    </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Confluent.Kafka" Version="2.13.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="Confluent.Kafka" Version="2.3.0" />
-      <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="PLC-Kafka.png">
-        <Pack>True</Pack>
-        <PackagePath></PackagePath>
-      </None>
-    </ItemGroup>
-
+  <ItemGroup>
+    <None Update="PLC-Kafka.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 </Project>

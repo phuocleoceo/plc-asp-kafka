@@ -23,6 +23,7 @@ dotnet add package PlcKafkaLibrary
 Here's an example of how to use PlcKafkaLibrary to send and receive data between ASP.NET Application and Kafka:
 
 #### appsettings.json
+
 ```json
 {
   "Kafka": {
@@ -33,6 +34,7 @@ Here's an example of how to use PlcKafkaLibrary to send and receive data between
     "SecurityProtocol": "SaslPlaintext",
     "SaslUsername": "username",
     "SaslPassword": "password",
+    "BrokerAddressFamily": "V4",
     "AdminClient": {
       "CreateTopic": true,
       "LoggingMetadata": [
@@ -72,6 +74,7 @@ Here's an example of how to use PlcKafkaLibrary to send and receive data between
 ```
 
 #### Producer
+
 ```csharp
 using PlcKafkaLibrary;
 
@@ -84,27 +87,21 @@ builder.Services.AddKafkaProducer<string, object>();
 ```csharp
 using PlcKafkaLibrary.Producer;
 
-public class YourService : IYourService
+public class YourService(IKafkaMessageBus<string, object> kafkaMessageBus) : IYourService
 {
-    private readonly IKafkaMessageBus<string, object> _kafkaMessageBus;
-
-    public YourService(IKafkaMessageBus<string, object> kafkaMessageBus)
-    {
-        _kafkaMessageBus = kafkaMessageBus;
-    }
-
     public async Task SendUserMessage(User user)
     {
         string topic = "User";
         string key = Guid.NewGuid().ToString();
         Dictionary<string, byte[]> headers = new Dictionary<string, byte[]>();
         headers.Add("header-label", Encoding.UTF8.GetBytes("header-value"));
-        
-        await _kafkaMessageBus.PublishAsync(topic, key, user, headers);
+
+        await kafkaMessageBus.PublishAsync(topic, key, user, headers);
     }
 ```
 
 #### Consumer
+
 ```csharp
 using PlcKafkaLibrary;
 
@@ -146,6 +143,6 @@ PlcKafkaLibrary is distributed under the [MIT License](LICENSE). See the LICENSE
 
 If you have any questions or suggestions, feel free to contact me via email: phuoc.truong.1008@gmail.com
 
---- 
+---
 
 The library is developed by phuocleoceo - Copyright © 2024

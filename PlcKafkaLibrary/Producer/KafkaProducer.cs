@@ -1,7 +1,6 @@
+using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Confluent.Kafka;
-
 using PlcKafkaLibrary.Configuration;
 using PlcKafkaLibrary.Data;
 
@@ -43,7 +42,7 @@ public class KafkaProducer<TKey, TValue> : IDisposable
             return;
         }
 
-        Headers kafkaHeaders = new Headers();
+        Headers kafkaHeaders = [];
 
         if (headers != null)
         {
@@ -59,7 +58,7 @@ public class KafkaProducer<TKey, TValue> : IDisposable
             {
                 Key = key,
                 Value = value,
-                Headers = kafkaHeaders
+                Headers = kafkaHeaders,
             }
         );
     }
