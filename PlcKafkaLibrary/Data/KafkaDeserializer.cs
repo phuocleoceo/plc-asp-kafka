@@ -1,6 +1,6 @@
 using System.Text;
 using Confluent.Kafka;
-using Newtonsoft.Json;
+using PlcKafkaLibrary.Utils;
 
 namespace PlcKafkaLibrary.Data;
 
@@ -22,6 +22,6 @@ internal sealed class KafkaDeserializer<T> : IDeserializer<T>
             return default;
         }
 
-        return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(data));
+        return JsonUtils.Deserialize<T>(Encoding.UTF8.GetString(data));
     }
 }

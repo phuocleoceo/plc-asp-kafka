@@ -1,6 +1,6 @@
 using System.Text;
 using Confluent.Kafka;
-using Newtonsoft.Json;
+using PlcKafkaLibrary.Utils;
 
 namespace PlcKafkaLibrary.Data;
 
@@ -18,6 +18,6 @@ internal sealed class KafkaSerializer<T> : ISerializer<T>
             throw new NotSupportedException("Not Supported.");
         }
 
-        return Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data));
+        return Encoding.UTF8.GetBytes(JsonUtils.Serialize(data));
     }
 }
